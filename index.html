@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한화생명 상담 PLUS AI</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-nav">
+        <div class="logo-area">
+            <div class="logo-icon">H</div>
+            <h1 class="logo-text">한화생명 <span>상담 PLUS AI</span></h1>
+        </div>
+        
+        <!-- Screen A, B, C, D Selector Tabs -->
+        <div class="tab-container" role="tablist">
+            <button class="tab-btn active" id="tabBtnA" role="tab" aria-selected="true">
+                <span>🅰️</span> A안 (아이콘 연동)
+            </button>
+            <button class="tab-btn" id="tabBtnB" role="tab" aria-selected="false">
+                <span>🅱️</span> B안 (고객선택 체크박스)
+            </button>
+            <button class="tab-btn" id="tabBtnC" role="tab" aria-selected="false">
+                <span>🅲</span> C안 (사이드바 검색)
+            </button>
+            <button class="tab-btn" id="tabBtnD" role="tab" aria-selected="false">
+                <span>🅳</span> D안 (하이브리드 터치)
+            </button>
+        </div>
+
+        <div class="nav-actions">
+            <button class="btn-feedback-toggle" id="btnFeedbackToggle">
+                💬 현장 의견 제출 / 통계
+            </button>
+        </div>
+    </header>
+
+    <!-- GLOBAL ANNOUNCEMENT TICKER -->
+    <div class="announcement-banner" id="announcementBanner" title="클릭하여 공지사항 상세 내용을 확인합니다">
+        <span class="announcement-icon">📢</span>
+        <div class="announcement-ticker">
+            <div class="announcement-text">
+                [공지] 실시간 한화생명 약관 업데이트가 완료되었습니다. (v2.4 반영) | [긴급안내] 6월 20일(토) 01:00 ~ 04:00 모바일 청구 시스템 서버 점검으로 서비스가 일시 지연될 수 있습니다. | [신규기능] 고객 연동 상담 중 질문 칩 자동 추천 기능이 개선되었습니다.
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN GRID WRAPPER -->
+    <div class="main-wrapper">
+        
+        <!-- 1. LEFT SIDEBAR (Sidebar controls & chat logs) -->
+        <aside class="sidebar">
+            <!-- FP User Profile Card -->
+            <div class="fp-profile-card">
+                <div class="fp-avatar">👤</div>
+                <div class="fp-info">
+                    <span class="fp-name">김한화 FP</span>
+                    <span class="fp-id">사번 2110772</span>
+                </div>
+            </div>
+
+            <div class="sidebar-header">
+                <button class="btn-new-chat" id="btnNewChat">
+                    <span>+</span> 새 대화 시작하기
+                </button>
+            </div>
+
+            <!-- B안 전용 고객 검색 영역 (사이드바) -->
+            <div class="sidebar-search-area" id="sidebarSearchArea">
+                <div class="search-title">고객 검색 및 연동</div>
+                <div class="search-input-wrapper">
+                    <input type="text" id="sidebarSearchInput" placeholder="고객명 입력 (예: 김*수)" autocomplete="off">
+                    <span class="search-clear-btn" id="btnSidebarSearchClear">✕</span>
+                </div>
+                <div class="sidebar-search-results" id="sidebarSearchResults">
+                    <!-- 검색 결과 리스트가 여기에 렌더링됨 -->
+                </div>
+            </div>
+
+            <!-- Active Customer Quick View -->
+            <div class="customer-context-card" id="customerContextCard">
+                <div class="context-title">연동된 고객 정보</div>
+                <div class="context-details">
+                    <div class="context-avatar none">?</div>
+                    <div class="context-info">
+                        <div class="context-info-name">연동 없음</div>
+                        <div class="context-info-desc">일반 모드로 질문합니다</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat History list (Simulated) -->
+            <div class="chat-history-container">
+                <div class="chat-history-section-title">최근 대화 기록</div>
+                <div class="history-item active">
+                    <span class="history-icon">💬</span>
+                    <span class="history-text">보장 내역 및 공백 분석</span>
+                    <span class="history-badge customer">고객연동</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-icon">💬</span>
+                    <span class="history-text">사망보험금 지급 예외 확인</span>
+                    <span class="history-badge general">일반</span>
+                </div>
+                <div class="history-item">
+                    <span class="history-icon">💬</span>
+                    <span class="history-text">실손의료비 청구 구비서류</span>
+                    <span class="history-badge general">일반</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 2. CENTER CHAT WORKSPACE -->
+        <main class="chat-pane">
+            
+            <!-- Chat Header & Context Injector -->
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <h2>실시간 AI 상품상담</h2>
+                    <span class="chat-header-divider"></span>
+                    
+                    <!-- Option-specific Header UI toggled via class on body -->
+                    <div class="option-controls">
+                        
+                        <!-- Design Option A: Icon-driven pill -->
+                        <div class="opt-a-control" id="optAControl" title="클릭하여 고객 정보를 연동합니다">
+                            <div class="opt-a-details" id="optADetails">
+                                <div class="opt-a-icon">👥</div>
+                                <div class="opt-a-text">고객 선택이 가능합니다</div>
+                            </div>
+                        </div>
+
+                        <!-- Design Option B: Checkbox toggle -->
+                        <div class="opt-b-control" title="체크 시 고객 정보를 불러옵니다">
+                            <input type="checkbox" id="optBCheckbox" class="opt-b-checkbox">
+                            <label for="optBCheckbox" class="opt-b-label">고객선택하고 묻기</label>
+                            <div id="optBPillContainer"></div>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <div class="chat-header-right">
+                    <span class="chat-mode-badge" id="chatModeBadge">한화생명 약관 v2.4 탑재</span>
+                </div>
+            </div>
+
+            <!-- Chat history bubble area -->
+            <div class="messages-container" id="messagesContainer">
+                
+                <!-- Inside JS render, welcome container will be displayed if empty -->
+                <div class="welcome-container" id="welcomeContainer">
+                    <div class="welcome-logo">🍊</div>
+                    <h3 class="welcome-title">안녕하세요, FP 파트너님!</h3>
+                    <p class="welcome-desc" id="welcomeDesc">보험 약관 정보, 가입 금액 및 부족한 보장 공백을 AI로 분석하여 답변을 제공하는 AI 비서입니다. 아래 가이드를 따라 시안 A, B, C, D를 테스트해 보세요.</p>
+                    
+                    <div class="welcome-steps" id="welcomeSteps">
+                        <div class="welcome-step-card">
+                            <div class="step-card-num">1</div>
+                            <div class="step-card-title">고객 정보를 연동해 보세요</div>
+                            <div class="step-card-desc" id="welcomeStep1Desc">A안: 상단 👥아이콘 클릭 / B안: 상단 [고객선택하고 묻기] 체크 후 대화창에서 고객 선택 / C안: 왼쪽 고객 검색창에서 검색 후 클릭 / D안: 입력창 옆 [👤고객선택] 클릭</div>
+                        </div>
+                        <div class="welcome-step-card">
+                            <div class="step-card-num">2</div>
+                            <div class="step-card-title">계약을 다중 선택하고 물어보세요</div>
+                            <div class="step-card-desc" id="welcomeStep2Desc">대화창에 출력된 계약 카드들의 체크박스[✓]를 클릭해 활성화한 후, "보장 분석해줘" 또는 "요약해줘" 등을 입력해 보세요.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Predefined query suggestion chips -->
+            <div class="suggestions-container" id="suggestionsContainer">
+                <!-- Javascript will inject context-aware chips -->
+            </div>
+
+            <!-- Message input area -->
+            <div class="chat-input-area">
+                <!-- C안 전용 실시간 자동완성 팝업 -->
+                <div class="autocomplete-popup" id="autocompletePopup"></div>
+                
+                <!-- C안 스마트 플로팅 연동 제안 배지 -->
+                <div class="smart-floating-badge" id="smartFloatingBadge">
+                    <span class="badge-icon">🔍</span>
+                    <span class="badge-text" id="smartBadgeText">고객 정보와 연동할까요?</span>
+                    <button class="btn-badge-action" id="btnBadgeAccept">연동 승인 (Enter)</button>
+                    <button class="btn-badge-close" id="btnBadgeClose">✕</button>
+                </div>
+
+                <div class="chat-input-container">
+                    <!-- D안 전용 큼직한 [👤 고객 선택] 버튼 -->
+                    <button class="btn-opt-d-select" id="btnOptDSelect" title="고객 선택">👤 고객 선택</button>
+                    
+                    <textarea class="chat-input" id="chatInput" placeholder="AI에게 물어보세요..." rows="1"></textarea>
+                    <button class="btn-send" id="btnSend" aria-label="보내기">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="chat-disclaimer">
+                    ⚠️ AI의 답변은 약관 해석 오류나 데이터 불일치 등으로 일부 부정확할 수 있으므로, 최종 고객 안내 전에 반드시 공식 원장 및 약관 규정을 재확인하시기 바랍니다.
+                </div>
+            </div>
+        </main>
+
+        <!-- 3. RIGHT SPLIT PANEL (Reference Viewer - initially width: 0) -->
+        <section class="doc-panel" id="docPanel">
+            <div class="doc-panel-header">
+                <div class="doc-panel-title">
+                    <span>📄</span> 근거 자료 조회
+                </div>
+                <button class="btn-doc-close" id="btnDocClose" aria-label="닫기">✕</button>
+            </div>
+            <div class="doc-panel-body" id="docPanelBody">
+                <!-- Dynamic clause or manual text renders here -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- CUSTOMER SELECTION MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>FP 보유 고객 검색 및 연동</h3>
+                <button class="btn-modal-close" id="btnModalClose">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="customer-list" id="customerListContainer">
+                    <!-- Customers dynamically injected from JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEEDBACK SIDE PANEL (A/B Test Verification tool) -->
+    <div class="feedback-panel" id="feedbackPanel">
+        <div class="feedback-panel-header">
+            <h3>A/B 테스팅 현장 의견 수렴</h3>
+            <button class="btn-doc-close" id="btnFeedbackClose">✕</button>
+        </div>
+        
+        <nav class="feedback-tabs">
+            <button class="feedback-tab-btn active" id="feedbackFormTab">의견 등록</button>
+            <button class="feedback-tab-btn" id="feedbackStatsTab">현장 통계 대시보드</button>
+        </nav>
+
+        <div class="feedback-panel-body">
+            
+            <!-- tab 1: form -->
+            <form id="feedbackForm" class="feedback-form-view" style="display: block;">
+                <div class="form-group">
+                    <span class="form-label">Q1. FP 업무 수행 시 어떤 방식이 더 직관적이고 편리한가요?</span>
+                    <div class="preference-options">
+                        <div class="pref-card" data-pref="A">
+                            <div class="pref-card-title">A안 선호</div>
+                            <div class="pref-card-desc">아이콘 클릭 연동</div>
+                        </div>
+                        <div class="pref-card" data-pref="B">
+                            <div class="pref-card-title">B안 선호</div>
+                            <div class="pref-card-desc">사이드바 검색 연동</div>
+                        </div>
+                        <div class="pref-card" data-pref="C">
+                            <div class="pref-card-title">C안 선호</div>
+                            <div class="pref-card-desc">자연어/@ 인식 연동</div>
+                        </div>
+                        <div class="pref-card" data-pref="D">
+                            <div class="pref-card-title">D안 선호</div>
+                            <div class="pref-card-desc">하이브리드 터치 연동</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <span class="form-label">Q2. 해당 화면 시안의 전체적인 UX 만족도는 어떠신가요?</span>
+                    <div class="rating-stars" id="ratingStars">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedbackComment" class="form-label">Q3. 디자인 완성도 향상을 위한 추가적인 현장의 아이디어를 적어주세요.</label>
+                    <textarea id="feedbackComment" class="text-area" placeholder="예: 약관 조회 창 크기를 마우스로 조정할 수 있었으면 좋겠어요. 고객 나이 외에 성별 아이콘 색상이 더 뚜렷하면 좋겠습니다."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit-feedback">현장 피드백 제출하기</button>
+            </form>
+
+            <!-- tab 2: stats -->
+            <div class="feedback-stats-view" id="feedbackStatsView" style="display: none;">
+                <div class="stats-summary">
+                    <div class="stats-title">실시간 선호 시안 집계</div>
+                    <div class="votes-chart">
+                        <div class="votes-bar-a" id="voteABar" style="width: 25%;">A안</div>
+                        <div class="votes-bar-b" id="voteBBar" style="width: 25%;">B안</div>
+                        <div class="votes-bar-c" id="voteCBar" style="width: 25%; background-color: #3b82f6;">C안</div>
+                        <div class="votes-bar-d" id="voteDBar" style="width: 25%; background-color: #10b981;">D안</div>
+                    </div>
+                    <div class="stats-numbers" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="stat-item">
+                            <span class="stat-item-label">A안 득표</span>
+                            <span class="stat-item-val" id="countValA">0표</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-item-label">B안 득표</span>
+                            <span class="stat-item-val" id="countValB">0표</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-item-label">C안 득표</span>
+                            <span class="stat-item-val" id="countValC">0표</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-item-label">D안 득표</span>
+                            <span class="stat-item-val" id="countValD">0표</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <div class="stats-summary" style="margin-bottom: 0;">
+                        <div class="stats-title">평균 별점</div>
+                        <div class="stat-item-val" id="averageRatingVal" style="font-size: 24px; color:#FBBF24;">4.8 / 5.0</div>
+                    </div>
+                    <div class="stats-summary" style="margin-bottom: 0;">
+                        <div class="stats-title">총 피드백</div>
+                        <div class="stat-item-val" id="totalCountVal" style="font-size: 24px;">3건</div>
+                    </div>
+                </div>
+
+                <div class="stats-title">최근 등록된 실시간 의견</div>
+                <div class="recent-reviews-list" id="recentReviews">
+                    <!-- Injected via javascript -->
+                </div>
+
+                <button class="btn-export-csv" id="btnExportCsv">
+                    📥 CSV 파일로 전체 데이터 다운로드
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ANNOUNCEMENT DETAILS MODAL -->
+    <div class="modal-overlay" id="announceModalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📢 전체 공지 및 안내사항</h3>
+                <button class="btn-modal-close" id="btnAnnounceModalClose">✕</button>
+            </div>
+            <div class="modal-body" style="line-height: 1.6; font-size: 13px;">
+                <div style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                    <strong style="color: var(--primary); font-size: 14px;">[공지] 실시간 한화생명 약관 업데이트 완료 (v2.4)</strong>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">등록일: 2026-06-19</div>
+                    <p style="margin-top: 8px;">2026년 상반기 개정된 스마트통합종신보험 및 시그니처암보험의 신규 약관 정보가 AI 대화 모델에 연동 완료되었습니다. 보장 범위 대조 시 참고하여 주시기 바랍니다.</p>
+                </div>
+                <div style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                    <strong style="color: #D97706; font-size: 14px;">[긴급점검] 모바일 청구 시스템 서버 점검 안내</strong>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">등록일: 2026-06-19</div>
+                    <p style="margin-top: 8px;">작업 일시: 2026년 6월 20일(토) 01:00 ~ 04:00 (3시간)<br>해당 시간 중 모바일 청구서 제출 및 조회 시 응답 지연이 있을 수 있으니 업무에 참고하시기 바랍니다.</p>
+                </div>
+                <div>
+                    <strong style="font-size: 14px;">[안내] 고객 연동 추천 질문 기능 개선</strong>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">등록일: 2026-06-18</div>
+                    <p style="margin-top: 8px;">고객 연동 시 FP 여러분이 가장 많이 묻는 보장 분석, 약관 검색 질문들이 대화 흐름에 맞게 더욱 스마트하게 자동 추천되도록 고도화되었습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
