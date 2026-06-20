@@ -1620,38 +1620,44 @@ body.option-c-active .sidebar-search-area {
     color: white;
 }
 
-/* Option D select button styling */
-.btn-opt-d-select {
+/* Option D pill select button styling */
+.btn-opt-d-pill-select {
     display: none;
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 8px 12px;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    border: 1.5px dashed var(--primary);
+    border-radius: 20px;
+    padding: 6px 16px;
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
-    margin-right: 8px;
-    white-space: nowrap;
+    align-self: flex-start;
+    margin-bottom: 8px;
     transition: var(--transition);
-    height: 36px;
-    align-items: center;
-    justify-content: center;
+    white-space: nowrap;
 }
 
-.btn-opt-d-select:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-1px);
+.btn-opt-d-pill-select:hover {
+    background-color: var(--primary);
+    color: white;
+    border-style: solid;
+    box-shadow: 0 4px 10px rgba(255, 102, 0, 0.15);
 }
 
-body.option-d-active .btn-opt-d-select {
+body.option-d-active .btn-opt-d-pill-select {
     display: flex;
 }
 
 /* Hide other option specific widgets when not active */
 body.option-b-active .opt-a-control,
-body.option-c-active .opt-a-control,
+body.option-c-active .opt-a-control { display: none !important; }
+
+/* Hide Option D top name tag unless selected (active) */
 body.option-d-active .opt-a-control { display: none !important; }
+body.option-d-active .opt-a-control.active { display: flex !important; }
 
 /* Option C: Autocomplete popup */
 .autocomplete-popup {
@@ -1898,4 +1904,104 @@ body.option-d-active .opt-a-control { display: none !important; }
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(255, 102, 0, 0.08);
 }
+
+/* Option D Bottom Sheet and Backdrop Styles */
+.bottom-sheet-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(1px);
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition);
+}
+
+.bottom-sheet-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.bottom-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -100%;
+    background-color: var(--bg-card);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    transition: bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 55%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-sheet.open {
+    bottom: 0;
+}
+
+.bottom-sheet-header {
+    padding: 12px 20px 8px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #FAFAFA;
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+}
+
+.bottom-sheet-bar {
+    width: 36px;
+    height: 4px;
+    background-color: #CBD5E1;
+    border-radius: 2px;
+    margin-bottom: 10px;
+}
+
+.bottom-sheet-title-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bottom-sheet-title-row h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.btn-close-sheet {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    transition: var(--transition);
+}
+
+.btn-close-sheet:hover {
+    color: #EF4444;
+}
+
+.bottom-sheet-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+}
+
+.bottom-sheet-customer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 

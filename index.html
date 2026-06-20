@@ -191,10 +191,12 @@
                     <button class="btn-badge-close" id="btnBadgeClose">✕</button>
                 </div>
 
+                <!-- D안 전용 알약 형태의 고객 선택 텍스트 버튼 -->
+                <button class="btn-opt-d-pill-select" id="btnOptDPillSelect" title="고객 선택하여 질문하기">
+                    + 고객 선택하여 질문하기
+                </button>
+
                 <div class="chat-input-container">
-                    <!-- D안 전용 큼직한 [👤 고객 선택] 버튼 -->
-                    <button class="btn-opt-d-select" id="btnOptDSelect" title="고객 선택">👤 고객 선택</button>
-                    
                     <textarea class="chat-input" id="chatInput" placeholder="AI에게 물어보세요..." rows="1"></textarea>
                     <button class="btn-send" id="btnSend" aria-label="보내기">
                         <svg viewBox="0 0 24 24">
@@ -204,8 +206,24 @@
                 </div>
                 <div class="chat-disclaimer">
                     ⚠️ AI의 답변은 약관 해석 오류나 데이터 불일치 등으로 일부 부정확할 수 있으므로, 최종 고객 안내 전에 반드시 공식 원장 및 약관 규정을 재확인하시기 바랍니다.
+            </div>
+
+            <!-- Option D Bottom Sheet -->
+            <div class="bottom-sheet" id="bottomSheet">
+                <div class="bottom-sheet-header">
+                    <div class="bottom-sheet-bar"></div>
+                    <div class="bottom-sheet-title-row">
+                        <h4>고객 선택 (하이브리드 터치)</h4>
+                        <button class="btn-close-sheet" id="btnCloseSheet">✕</button>
+                    </div>
+                </div>
+                <div class="bottom-sheet-body">
+                    <div class="bottom-sheet-customer-list" id="sheetCustomerList">
+                        <!-- Injected dynamically in JS -->
+                    </div>
                 </div>
             </div>
+            <div class="bottom-sheet-backdrop" id="bottomSheetBackdrop"></div>
         </main>
 
         <!-- 3. RIGHT SPLIT PANEL (Reference Viewer - initially width: 0) -->
@@ -241,7 +259,7 @@
     <!-- FEEDBACK SIDE PANEL (A/B Test Verification tool) -->
     <div class="feedback-panel" id="feedbackPanel">
         <div class="feedback-panel-header">
-            <h3>A/B 테스팅 현장 의견 수렴</h3>
+            <h3>시안(A/B/C/D) 현장 의견 수렴</h3>
             <button class="btn-doc-close" id="btnFeedbackClose">✕</button>
         </div>
         
@@ -263,11 +281,11 @@
                         </div>
                         <div class="pref-card" data-pref="B">
                             <div class="pref-card-title">B안 선호</div>
-                            <div class="pref-card-desc">사이드바 검색 연동</div>
+                            <div class="pref-card-desc">고객선택 체크박스</div>
                         </div>
                         <div class="pref-card" data-pref="C">
                             <div class="pref-card-title">C안 선호</div>
-                            <div class="pref-card-desc">자연어/@ 인식 연동</div>
+                            <div class="pref-card-desc">사이드바 검색 연동</div>
                         </div>
                         <div class="pref-card" data-pref="D">
                             <div class="pref-card-title">D안 선호</div>

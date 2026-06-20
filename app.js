@@ -260,8 +260,30 @@ function bindEvents() {
     document.getElementById('btnBadgeAccept').addEventListener('click', acceptSmartBadge);
     document.getElementById('btnBadgeClose').addEventListener('click', hideSmartBadge);
 
-    // Option D: Large [👤 고객 선택] button next to text input
-    document.getElementById('btnOptDSelect').addEventListener('click', openCustomerSelector);
+    // Option D: Pill-shaped customer select button above the input container
+    const pillButton = document.getElementById('btnOptDPillSelect');
+    if (pillButton) {
+        pillButton.addEventListener('click', (e) => {
+            if (appState.activeTab !== 'D') return;
+            
+            const customer = appState.chatState.D.selectedCustomer;
+            if (customer) {
+                // If they clicked the '✕' disconnect button
+                if (e.target.classList.contains('pill-disconnect')) {
+                    e.stopPropagation();
+                    clearCustomerContext();
+                } else {
+                    openBottomSheet();
+                }
+            } else {
+                openBottomSheet();
+            }
+        });
+    }
+
+    // Option D: Bottom Sheet controls
+    document.getElementById('btnCloseSheet').addEventListener('click', closeBottomSheet);
+    document.getElementById('bottomSheetBackdrop').addEventListener('click', closeBottomSheet);
 
     // Option B: Checkbox toggle for inline customer list
     const optBCheckbox = document.getElementById('optBCheckbox');
@@ -362,11 +384,11 @@ function bindEvents() {
 // Updates the option-specific header elements based on context
 function updateHeaderControls() {
     const option = appState.activeTab;
-    if (option !== 'A' && option !== 'B') return; // C and D have no header controls
+    if (option !== 'A' && option !== 'B' && option !== 'D') return;
     
     const customer = appState.chatState[option].selectedCustomer;
     
-    if (option === 'A') {
+    if (option === 'A' || option === 'D') {
         const optAControl = document.getElementById('optAControl');
         const optADetails = document.getElementById('optADetails');
         
@@ -391,6 +413,26 @@ function updateHeaderControls() {
                 <div class="opt-a-icon">👥</div>
                 <div class="opt-a-text">고객 선택이 가능합니다</div>
             `;
+        }
+    }
+
+    // Update Option D's bottom text button to show selected customer state
+    if (option === 'D') {
+        const pillButton = document.getElementById('btnOptDPillSelect');
+        if (pillButton) {
+            if (customer) {
+                pillButton.classList.add('selected');
+                pillButton.innerHTML = `👤 ${customer.name} 고객 (계약 ${customer.contracts.length}건) <span class="pill-disconnect" style="margin-left: 6px; font-weight: bold; cursor: pointer;">✕</span>`;
+                pillButton.style.borderStyle = 'solid';
+                pillButton.style.backgroundColor = 'var(--primary-light)';
+                pillButton.style.color = 'var(--primary)';
+            } else {
+                pillButton.classList.remove('selected');
+                pillButton.innerHTML = `+ 고객 선택하여 질문하기`;
+                pillButton.style.borderStyle = 'dashed';
+                pillButton.style.backgroundColor = '';
+                pillButton.style.color = '';
+            }
         }
     }
 }
@@ -427,6 +469,9 @@ function switchOption(option) {
     document.getElementById('sidebarSearchInput').value = '';
     document.getElementById('btnSidebarSearchClear').style.display = 'none';
     renderSidebarSearchResults('');
+
+    // Close Option D Bottom Sheet when switching tabs
+    closeBottomSheet();
 
     // Update header controls for new option state
     updateHeaderControls();
@@ -1364,9 +1409,9 @@ function renderStats() {
     // Default initial mock stats if empty, to make the prototype look alive
     const defaultStats = [
         { id: 'f1', date: '2026-06-18', preferred: 'A', rating: 5, comment: "아이콘 방식이 대화 입력창을 가리지 않고 프로필 확인이 직관적이어서 깔끔합니다." },
-        { id: 'f2', date: '2026-06-18', preferred: 'B', rating: 4, comment: "사이드바에 고객 검색 폼이 있으니 모달을 띄우지 않고 바로 찾을 수 있어 업무 속도가 빠릅니다." },
-        { id: 'f3', date: '2026-06-19', preferred: 'C', rating: 5, comment: "@만 쳐도 단골 고객 목록이 나오는 자동완성 방식이 아주 혁신적이고 키보드 동선이 깔끔하네요." },
-        { id: 'f4', date: '2026-06-19', preferred: 'D', rating: 5, comment: "입력창 바로 옆에 큼직하게 [고객 선택] 버튼이 있고 터치 추천 칩이 커서 어르신 FP분들이 가장 좋아할 것 같습니다." }
+        { id: 'f2', date: '2026-06-18', preferred: 'B', rating: 4, comment: "대화창 내부에서 고객 리스트가 바로 뜨니까 시선 이동 없이 터치 한 번으로 선택할 수 있어 편리하네요." },
+        { id: 'f3', date: '2026-06-19', preferred: 'C', rating: 5, comment: "사이드바에 고객 검색 폼이 있으니 모달을 띄우지 않고 바로 찾을 수 있어 업무 속도가 빠릅니다." },
+        { id: 'f4', date: '2026-06-19', preferred: 'D', rating: 5, comment: "입력창 위에 큼직하게 알약 형태의 [고객 선택하여 질문하기] 버튼이 있고 바텀 시트가 슬라이드로 올라오니까 모바일에서 한 손으로 다루기 가장 좋습니다." }
     ];
     
     let combinedList = [...list];
@@ -1490,4 +1535,49 @@ window.selectCustomerFromChat = function(id) {
     // 상단 체크박스 상태 유지
     document.getElementById('optBCheckbox').checked = true;
 };
+
+// D안: 바텀 시트 제어 함수들
+function openBottomSheet() {
+    renderSheetCustomerList();
+    document.getElementById('bottomSheet').classList.add('open');
+    document.getElementById('bottomSheetBackdrop').classList.add('open');
+}
+
+function closeBottomSheet() {
+    const bottomSheet = document.getElementById('bottomSheet');
+    const backdrop = document.getElementById('bottomSheetBackdrop');
+    if (bottomSheet) bottomSheet.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('open');
+}
+
+function renderSheetCustomerList() {
+    const container = document.getElementById('sheetCustomerList');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    customerDb.forEach(cust => {
+        const activeCust = appState.chatState.D.selectedCustomer;
+        const isSelected = activeCust && activeCust.id === cust.id;
+        const contractNames = cust.contracts.map(c => c.name.replace("(무)한화생명 ", "")).join(", ");
+        
+        const card = document.createElement('div');
+        card.className = `customer-card ${isSelected ? 'selected' : ''}`;
+        card.innerHTML = `
+            <div class="customer-avatar ${cust.genderCode}">
+                ${cust.name.substring(0,1)}
+            </div>
+            <div class="customer-meta">
+                <div class="customer-name-age">${cust.name} (${cust.birth} · ${cust.gender})</div>
+                <div class="customer-contracts">계약 ${cust.contracts.length}건 | ${contractNames}</div>
+            </div>
+            <div class="customer-select-indicator"></div>
+        `;
+        card.addEventListener('click', () => {
+            selectCustomer(cust.id);
+            closeBottomSheet();
+        });
+        container.appendChild(card);
+    });
+}
+
 
